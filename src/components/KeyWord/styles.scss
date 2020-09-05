@@ -1,0 +1,18 @@
+@import '../../scss-base/colors';
+
+.key-word {
+    background-color: $color-very-light-pink;
+    color: $color-first;
+    font-size: 0.9em;
+
+    padding: 1px 3px 2px 3px;
+    margin: 0px;
+    white-space: nowrap;
+    border-radius: .4rem;
+}
+article {
+  .key-word {
+    background-color: $color-light-pink;
+    color: $color-first;
+  }
+}
