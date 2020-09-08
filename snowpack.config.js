@@ -23,7 +23,7 @@ module.exports = {
   },
   buildOptions: {
     metaDir: 'metadata',
-    minify: false,
+    minify: true,
   },
   alias: {
     "@src" : './src'
