@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from "react-router";
 
 
 import ParticlesProgram from './particles-program'
@@ -163,4 +162,4 @@ class _cls extends React.Component {
   }
 }
 
-export default withRouter(_cls)
+export default _cls
