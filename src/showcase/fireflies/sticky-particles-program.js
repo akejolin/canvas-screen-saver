@@ -3,7 +3,7 @@ import { randomNumBetween } from './helpers'
 import {
   addInterval as aIntv,
   removeInterval,
-} from '../game-interval-handler'
+} from './interval-handler'
 
 
 const wait = ms => new Promise(
@@ -46,7 +46,7 @@ export default class StickyParticlesProgram {
     const fontSize = 200
     var ratio = fontSize / fontBase   // calc ratio
     var size = width * ratio   // get font size based on current width
-    return (size | 0) + 'px BlocketSans-Bold' // set font
+    return (size | 0) + 'px helvetica' // set font
   }
 
   async drawText(state) {

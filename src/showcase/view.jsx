@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FlexView } from '@src/components/FlexView'
 
-import Canvas from './fireflies/app'
+import Canvas from './fireflies/engine'
 
 class _cls extends React.Component{
   render() {

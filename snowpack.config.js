@@ -15,7 +15,7 @@ module.exports = {
     }],
     ["snowpack-plugin-baseurl-handler", {
       exts: [".html", ".js", ".jsx", ".css", ".scss"],
-      baseUrl: '/about-me',
+      baseUrl: '/canvas-screen-saver',
     }]
   ],
   installOptions: {

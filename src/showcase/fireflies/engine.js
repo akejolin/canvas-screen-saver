@@ -6,7 +6,7 @@ import { withRouter } from "react-router";
 import StickyParticlesProgram from './sticky-particles-program'
 import {
   clearAllIntervals,
-} from '../game-interval-handler'
+} from './interval-handler'
 
 
 class _cls extends React.Component {

@@ -6,9 +6,9 @@ import './styles.scss'
 
 function App() {
   return (
-      <BrowserRouter>
-        <ShowCase />
-      </BrowserRouter>
+    <BrowserRouter>
+      <ShowCase />
+    </BrowserRouter>
   )
 }
 

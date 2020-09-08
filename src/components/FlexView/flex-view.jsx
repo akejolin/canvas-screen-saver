@@ -2,20 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './styles.scss'
 
-interface AppProps {
-  row?: boolean;
-  style?: object;
-  tagName: string;
-  children?: any;
-  className?: string,
-}
-
-const FlexView = (props: AppProps) => {
-  const styles: any = {
+const FlexView = (props) => {
+  const styles = {
     default: props.row ? {flexDirection: 'row'} : {} // Default has been moved to scss
   }
 
-  let outputStyles: any = {
+  let outputStyles = {
     ...styles.default,
     ...props.style,
   }
@@ -42,8 +34,8 @@ const FlexView = (props: AppProps) => {
       },
     }
   };
-  const TagName:string = props.tagName;
-  let setProps:any = {...props}
+  const TagName = props.tagName;
+  let setProps = {...props}
   setProps.style = outputStyles
 
   setProps.className = `flex-view${props.className ? ' ' + props.className : ''}`
