@@ -4,20 +4,18 @@ import { FlexView } from '@src/components/FlexView'
 
 import Canvas from './fireflies/engine'
 
-class _cls extends React.Component{
-  render() {
-    return (
-      <FlexView
-        row
-        style={{
-					backgroundSize: 'cover',
-    			overflow: 'hidden',
-        }}
-      >
-        <Canvas/>
-      </FlexView>
-    );
-  }
-}
+const _cls = () => (
+  <FlexView
+    row
+    style={{
+      backgroundSize: 'cover',
+      overflow: 'hidden',
+    }}
+  >
+    <div style={{position: 'absolute', zIndex: 10, bottom: 10, left: 10}}><a href="https://github.com/akejolin">Akejolin</a></div>
+    <Canvas/>
+  </FlexView>
+)
+
 
 export default _cls
