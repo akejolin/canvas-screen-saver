@@ -32,7 +32,8 @@ function shuffle(array) {
   return array
 }
 
-export default class StickyParticlesProgram {
+export default class ParticlesProgram {
+  // ---------------------------------------------------
   constructor(props) {
 
     this.particles = []
@@ -41,6 +42,7 @@ export default class StickyParticlesProgram {
     this.type = 'text'
     this.hasStarted = false
   }
+  // ---------------------------------------------------
   getFont(width) {
     const fontBase = 1000
     const fontSize = 200
@@ -48,8 +50,8 @@ export default class StickyParticlesProgram {
     var size = width * ratio   // get font size based on current width
     return (size | 0) + 'px helvetica' // set font
   }
-
-  async drawText(state) {
+  // ---------------------------------------------------
+  async drawText(state, text) {
 
     const ctx = state.context
     let { width, height } = state.screen
@@ -58,17 +60,15 @@ export default class StickyParticlesProgram {
       ctx.clearRect(0, 0, width, height)
       ctx.font = this.getFont(width)
       ctx.textAlign = "center";
-      ctx.fillText(this.text, width/2, height/2 + 250/2);
+      ctx.fillText(text, width/2, height/2 + 250/2);
       ctx.restore()
       resolve()
     })
   }
-
-  async init(state, type='text') {
+  // ---------------------------------------------------
+  async createNew(state, text) {
     const ctx = state.context
-
-    await this.drawText(state)
-
+    await this.drawText(state, text ? text : this.text)
     let { width, height } = state.screen
 
     const imageData  = await ctx.getImageData(0, 0, width, height)
@@ -76,28 +76,43 @@ export default class StickyParticlesProgram {
     const data = imageData.data
     ctx.clearRect(0, 0, width, height)
     ctx.globalCompositeOperation = "screen"
-    const preparticles = []
-    this.particles = []
+    const particles = []
 
     const getColorIndicesForCoord = (x, y, width) => {
       const red = y * (width * 4) + x * 4;
       return [red, red + 1, red + 2, red + 3];
     };
 
+    const radiusDelta = state.screen.size === 'L' ? state.screen.ratio * 3 : .1
+
     for (var i=0; i < width; i += Math.round(width/150)) {
       for (var j=0; j < height; j += Math.round(width/150)) {
         const colorIndices = getColorIndicesForCoord(i, j, width);
         const [redIndex, greenIndex, blueIndex, alphaIndex] = colorIndices;
         if (data[ ((i + j * width) * 4) + 3] > 150) {
-          preparticles.push(new Particle({x: i, y: j, ww: width, wh: height, color: {r: data[redIndex], g: data[greenIndex], b: data[blueIndex], a: data[alphaIndex]}}))
+          particles.push(new Particle({
+            x: i,
+            y: j,
+            ww: width,
+            wh: height,
+            color: {
+              r: data[redIndex],
+              g: data[greenIndex],
+              b: data[blueIndex],
+              a: data[alphaIndex]
+            },
+            radius: Math.random() * radiusDelta + 2
+          }))
         }
       }
     }
-
-    this.preparticles = preparticles
-    this.startAddParticlesToRender(state)
-
     ctx.restore()
+    return particles
+  }
+  // ---------------------------------------------------
+  async init(state, text) {
+    this.preparticles = await this.createNew(state, text)
+    this.startAddParticlesToRender(state)
   }
 
   // ---------------------------------------------------
@@ -118,12 +133,11 @@ export default class StickyParticlesProgram {
     }
 
     wait(10000).then(() => {
-      //this.startRemoveParticlesFromRender(state)
       this.newAction(state)
     })
 
   }
-
+  // ---------------------------------------------------
   delay(ms, callback) {
     setTimeout(callback(), ms)
   }
@@ -138,7 +152,7 @@ export default class StickyParticlesProgram {
       particles = shuffle(particles)
 
       const approxFontSize = Math.round(250/2)
-      const deltaX = randomNumBetween(Math.round(0 - ((state.screen.width/2) + approxFontSize)), Math.round((state.screen.width/2) - approxFontSize))
+      const deltaX = randomNumBetween(Math.round(0 - ((state.screen.width/2) - approxFontSize)), Math.round((state.screen.width/2) - approxFontSize))
       const deltaY = randomNumBetween(Math.round(0 - ((state.screen.height/2) - approxFontSize)), Math.round((state.screen.height/2) - approxFontSize))
 
       const promiseShape = (i, d) => new Promise(resolve => {
@@ -160,7 +174,6 @@ export default class StickyParticlesProgram {
 
       removeInterval('time-to-move')
       aIntv('time-to-move', 500, () => {
-      console.log('Time to move')
         removeInterval('time-to-move')
         pi = particles.length
         while (pi > 0) {
@@ -171,7 +184,6 @@ export default class StickyParticlesProgram {
       })
       removeInterval('time-to-shape')
       aIntv('time-to-shape', 1000, () => {
-        console.log('Time to shape')
         removeInterval('time-to-shape')
         pi = particles.length
         while (pi > 0) {
@@ -184,53 +196,12 @@ export default class StickyParticlesProgram {
       removeInterval('time-for-next-round')
       aIntv('time-for-next-round', 15000, () => {
         removeInterval('time-for-next-round')
-        console.log('Time for next round')
         moveToNewTarget()
       })
     }
     moveToNewTarget()
   }
 
-  // ---------------------------------------------------
-  async startRemoveParticlesFromRender(state) {
-    removeInterval('shake_stickyParticles')
-
-    let particles = this.particles
-    let pi = particles.length
-
-    particles = shuffle(particles)
-    const spreadOut = i => new Promise(resolve => {
-        particles[i].setNewTarget({
-          x: state.screen.width*3,
-          y: randomNumBetween(0, state.screen.height),
-        })
-        particles[i].delayedDestroy(randomNumBetween(0, 3000))
-        resolve()
-      }
-    )
-
-    let maxdelay = 8000
-    while (pi > 0) {
-      pi--
-      maxdelay = maxdelay > 0 ? maxdelay - 1 : 0
-      this.delay(randomNumBetween(0, maxdelay), () => {
-        spreadOut(pi)
-      })
-    }
-    await wait(2000)
-    this.finished(state)
-  }
-  // ---------------------------------------------------
-  finished(state) {
-    removeInterval('wait_for_reloading')
-    aIntv('wait_for_reloading', 500, () => {
-      if (this.particles.length < 1) {
-        removeInterval('wait_for_reloading')
-        this.init(state)
-      }
-    })
-    return null
-  }
   // ---------------------------------------------------
   render(state) {
     const { width, height } = state.screen

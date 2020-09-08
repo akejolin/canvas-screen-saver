@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from "react-router";
 
 
-import StickyParticlesProgram from './sticky-particles-program'
+import ParticlesProgram from './particles-program'
 import {
   clearAllIntervals,
 } from './interval-handler'
@@ -81,6 +81,7 @@ class _cls extends React.Component {
         width,
         height,
         ratio,
+        size: width > 600 ? 'L' : 'S'
       }
     })
   }
@@ -112,22 +113,23 @@ class _cls extends React.Component {
 
   // -----------------------------------------------------
   startProgram() {
-    let stickyTextParticles = new StickyParticlesProgram({
+    const text = '😜'
+    const _particlesProgram = new ParticlesProgram({
       size: 300,
       position: {
         x: Math.ceil(this.state.screen.width/2),
         y: Math.ceil(this.state.screen.height/2 - (this.state.screen.height * 0.5)),
       },
       create: this.createObject.bind(this),
-      text: '😜', // '😜',
+      text,
       count: 2019,
       id: 'counter',
       ctx: this.state.context,
       screen: this.state.screen,
     })
-    stickyTextParticles.init(this.state, 'text')
+    _particlesProgram.init(this.state, text)
 
-    this.createObject(stickyTextParticles, 'particles');
+    this.createObject(_particlesProgram, 'particles');
 
   }
 
