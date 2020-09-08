@@ -1,3 +1,1 @@
-export const randomNumBetween = (min, max) => {
-  return Math.random() * (max - min + 1) + min;
-};
+export const randomNumBetween=(e,r)=>Math.random()*(r-e+1)+e;
