@@ -28,7 +28,12 @@ export default class Particle {
     this.delete = true;
   }
   delayedDestroy(milisec) {
-    setTimeout(() => this.destroy(), milisec)
+    return new Promise (resolve => {
+      setTimeout(() => {
+        this.destroy()
+        resolve()
+      }, milisec)
+    })
   }
   setNewTarget({ x, y }) {
     this.dest = { x, y, }

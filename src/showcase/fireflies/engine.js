@@ -126,44 +126,18 @@ class _cls extends React.Component {
   startProgram() {
     const text = this.emojis[Math.floor(randomNumBetween(0, this.emojis.length - 1 ))]
     const _particlesProgram = new ParticlesProgram({
-      size: 300,
       position: {
         x: Math.ceil(this.state.screen.width/2),
         y: Math.ceil(this.state.screen.height/2 - (this.state.screen.height * 0.5)),
       },
       create: this.createObject.bind(this),
       text,
-      count: 2019,
-      id: 'counter',
       ctx: this.state.context,
-      screen: this.state.screen,
+      emojis: this.emojis
     })
     _particlesProgram.init(this.state, text)
 
     this.createObject(_particlesProgram, 'particles');
-
-  }
-  // -----------------------------------------------------
-  generateNew() {
-
-    const text = this.emojis[Math.floor(randomNumBetween(0, this.emojis.length - 1 ))]
-    const _particlesProgram = new ParticlesProgram({
-      size: 300,
-      position: {
-        x: Math.ceil(this.state.screen.width/2),
-        y: Math.ceil(this.state.screen.height/2 - (this.state.screen.height * 0.5)),
-      },
-      create: this.createObject.bind(this),
-      text,
-      count: 2019,
-      id: 'counter',
-      ctx: this.state.context,
-      screen: this.state.screen,
-    })
-    _particlesProgram.init(this.state, text)
-
-    this.createObject(_particlesProgram, 'particles');
-
 
   }
 
@@ -183,7 +157,7 @@ class _cls extends React.Component {
   // -----------------------------------------------------
   optionClicked(e) {
     this.deleteAll('particles')
-    this.generateNew()
+    this.startProgram()
   }
 
   // -----------------------------------------------------
@@ -207,7 +181,7 @@ class _cls extends React.Component {
             height={this.state.screen.height}
           />
           <FlexView style={{position: 'absolute', zIndex: 10, bottom: 10, height: 60}}>
-            <button onClick={this.optionClicked.bind(this)}>Tilt</button>
+            <button onClick={this.optionClicked.bind(this)}>New</button>
           </FlexView>
       </React.Fragment>
     )

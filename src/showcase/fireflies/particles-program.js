@@ -43,6 +43,7 @@ export default class ParticlesProgram {
     this.hasStarted = false
     this.tilt = 0
     this.delete = false
+    this.emojis = props.emojis
   }
   // ---------------------------------------------------
   getFont(width) {
@@ -112,7 +113,7 @@ export default class ParticlesProgram {
     return particles
   }
   // ---------------------------------------------------
-  async init(state, text) {
+  async init(state, text=this.emojis[Math.floor(randomNumBetween(0, this.emojis.length - 1 ))]) {
     this.preparticles = await this.createNew(state, text)
     this.startAddParticlesToRender(state)
   }
@@ -140,6 +141,57 @@ export default class ParticlesProgram {
 
   }
   // ---------------------------------------------------
+  async deleteParticlesViaRender(state) {
+    let { particles } = this
+    particles = shuffle(particles)
+    let pi = particles.length
+    
+    let maxdelay = 2000
+
+    const promiseMove = (i, d) => new Promise(resolve => {
+      particles[i].setNewTarget({
+        x: particles[i].originPosition.x + randomNumBetween(0 - (particles[i].x + 200), particles[i].x + 200),
+        y: particles[i].originPosition.y + randomNumBetween(0 - (particles[i].y + 200), particles[i].y + 200),
+      })
+      setTimeout(() => resolve(), randomNumBetween(0, d))
+    })
+
+    removeInterval('time-to-remove')
+    aIntv('time-to-remove', 500, async () => {
+      removeInterval('time-to-remove')
+      const promises = []
+      while (pi > 0) {
+        pi = pi - 1
+        maxdelay = maxdelay > 0 ? maxdelay - 1 : 0
+        promiseMove(pi, 2)
+        promises.push(particles[pi].delayedDestroy(randomNumBetween(0, 1000)))
+      }
+      await Promise.all(promises)
+      await wait(500)
+      this.init(state)
+    })
+
+    // ToDo: something new should happen here
+    /*
+
+      this.init(state)
+
+    */
+
+  }
+
+
+  // -----------------------------------------------------
+  deleteAll(group) {
+    const { particles } = this
+    var ip = particles.length
+    while (ip > 0 ) {
+      ip--
+      particles[ip].delete = true
+    }
+  }
+
+  // ---------------------------------------------------
   delay(ms, callback) {
     setTimeout(callback(), ms)
   }
@@ -148,9 +200,10 @@ export default class ParticlesProgram {
 
     let particles = this.particles
     let pi = particles.length
+    let rounds = 0
 
     const moveToNewTarget = async () => {
-
+      rounds = rounds + 1
       particles = shuffle(particles)
 
       const approxFontSize = Math.round(250/2)
@@ -198,14 +251,17 @@ export default class ParticlesProgram {
       removeInterval('time-for-next-round')
       aIntv('time-for-next-round', 15000, () => {
         removeInterval('time-for-next-round')
-        moveToNewTarget()
+        if (rounds > 2  ) {
+          this.deleteParticlesViaRender(state)
+        } else {
+          moveToNewTarget()
+        }
       })
     }
     moveToNewTarget()
   }
   // ---------------------------------------------------
   setTilt(value) {
-    console.log('tilt: ', value)
     this.tilt = value
   }
   // ---------------------------------------------------
