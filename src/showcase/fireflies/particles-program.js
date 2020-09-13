@@ -41,6 +41,8 @@ export default class ParticlesProgram {
     this.text = props.text
     this.type = 'text'
     this.hasStarted = false
+    this.tilt = 0
+    this.delete = false
   }
   // ---------------------------------------------------
   getFont(width) {
@@ -201,11 +203,20 @@ export default class ParticlesProgram {
     }
     moveToNewTarget()
   }
-
+  // ---------------------------------------------------
+  setTilt(value) {
+    console.log('tilt: ', value)
+    this.tilt = value
+  }
   // ---------------------------------------------------
   render(state) {
     const { width, height } = state.screen
     const ctx = state.context
+
+    if (state.tilt !== this.tilt) {
+      this.setTilt(state.tilt)
+    }
+
     ctx.clearRect(0, 0, width, height)
 
     const { particles } = this

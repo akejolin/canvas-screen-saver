@@ -10,6 +10,7 @@ export default class Particle {
       x : props.x,
       y: props.y
     }
+    
     this.vx = (Math.random() - 0.5) * 20
     this.vy = (Math.random() - 0.5) * 20
     this.accX = 0
@@ -18,6 +19,8 @@ export default class Particle {
 
     this.color = `rgba(${props.color.r}, ${props.color.g}, ${props.color.b}, ${props.color.a})`
     this.radius = props.radius || Math.random() * 4 + 2
+    this.radiusRef = this.radius
+    this.grow = 0
     this.delete = false
   }
 
@@ -30,8 +33,27 @@ export default class Particle {
   setNewTarget({ x, y }) {
     this.dest = { x, y, }
   }
+  changeRadius() {
+    if (this.grow > 0) {
+      this.radius = this.radius + 0.1
+    } else {
+      this.radius = this.radius - 0.1
+    }
+  }
   render(state) {
     const ctx = state.context
+
+    //if (this.grow !== this.grow_ref) {
+     this.changeRadius()
+    //}
+
+    if (this.radius > this.radiusRef) {
+      this.grow = -1
+    }
+
+    if (this.radius < 1.5) {
+      this.grow = 1
+    }
 
     this.accX = (this.dest.x - this.x) / 1000
     this.accY = (this.dest.y - this.y) / 1000

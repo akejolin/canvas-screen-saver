@@ -6,6 +6,8 @@ import ParticlesProgram from './particles-program'
 import {
   clearAllIntervals,
 } from './interval-handler'
+import FlexView from '@src/components/flex-view'
+import { randomNumBetween } from './helpers'
 
 
 class _cls extends React.Component {
@@ -21,13 +23,78 @@ class _cls extends React.Component {
       },
       context: null,
       count: 0,
-      mostActiveRepo: '',
-      records: [],
-      sinceYesterday: 0,
-      week: 0,
+      tilt: 0,
     }
     this.particles = []
     this.run = this.run.bind(this)
+    this.emojis = [
+      '😜',
+      '😍',
+      '🦊',
+      '🐷',
+      '🐶',
+      '🐱',
+      '🐰',
+      '🦁',
+      '🐯',
+      '🐮',
+      '🐵',
+      '🐌',
+      '🐍',
+      '🐳',
+      '🦋',
+      '🦀',
+      '🐸',
+      '🦄',
+      '🐘',
+      '👻',
+      '🙏',
+      '🍀',
+      '☀️',
+      '🌈',
+      '🌎',
+      '⭐️',
+      '🌙',
+      '🔥',
+      '💥',
+      '⚡️',
+      '🌺',
+      '💧',
+      '🪐',
+      '🍄',
+      '🍇',
+      '🍎',
+      '🍊',
+      '🍌',
+      '🌽',
+      '🍉',
+      '🍭',
+      '🍹',
+      '🎂',
+      '🧁',
+      '🍔',
+      '🌭',
+      '🍿',
+      '🌶',
+      '🏀',
+      '⚽️',
+      '🏆',
+      '🎺',
+      '🎪',
+      '🚕',
+      '🚑',
+      '🚓',
+      '🚒',
+      '🚜',
+      '🛴',
+      '🚲',
+      '🕹',
+      '🧲',
+      '⏰',
+      '🔑',
+      '❤️'
+      '🏖',
+    ]
   }
   componentWillMount() {
     this.handleResize(null, null)
@@ -67,7 +134,7 @@ class _cls extends React.Component {
     window.addEventListener('resize',  this.handleResize.bind(this, false))
     this.startProgram()
   }
-  
+
   // -----------------------------------------------------
   handleResize(value, e) {
 
@@ -112,7 +179,7 @@ class _cls extends React.Component {
 
   // -----------------------------------------------------
   startProgram() {
-    const text = '😜'
+    const text = this.emojis[Math.floor(randomNumBetween(0, this.emojis.length - 1 ))]
     const _particlesProgram = new ParticlesProgram({
       size: 300,
       position: {
@@ -131,10 +198,47 @@ class _cls extends React.Component {
     this.createObject(_particlesProgram, 'particles');
 
   }
+  // -----------------------------------------------------
+  generateNew() {
+
+    const text = this.emojis[Math.floor(randomNumBetween(0, this.emojis.length - 1 ))]
+    const _particlesProgram = new ParticlesProgram({
+      size: 300,
+      position: {
+        x: Math.ceil(this.state.screen.width/2),
+        y: Math.ceil(this.state.screen.height/2 - (this.state.screen.height * 0.5)),
+      },
+      create: this.createObject.bind(this),
+      text,
+      count: 2019,
+      id: 'counter',
+      ctx: this.state.context,
+      screen: this.state.screen,
+    })
+    _particlesProgram.init(this.state, text)
+
+    this.createObject(_particlesProgram, 'particles');
+
+
+  }
 
   // -----------------------------------------------------
   createObject(item, group) {
     this[group].push(item);
+  }
+  // -----------------------------------------------------
+  deleteAll(group) {
+    const { particles } = this
+    var ip = particles.length
+    while (ip > 0 ) {
+      ip--
+      particles[ip].delete = true
+    }
+  }
+  // -----------------------------------------------------
+  optionClicked(e) {
+    this.deleteAll('particles')
+    this.generateNew()
   }
 
   // -----------------------------------------------------
@@ -157,6 +261,9 @@ class _cls extends React.Component {
             width={this.state.screen.width}
             height={this.state.screen.height}
           />
+          <FlexView style={{position: 'absolute', zIndex: 10, bottom: 10, height: 60}}>
+            <button onClick={this.optionClicked.bind(this)}>Tilt</button>
+          </FlexView>
       </React.Fragment>
     )
   }

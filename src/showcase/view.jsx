@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FlexView } from '@src/components/FlexView'
+import { FlexView } from '@src/components/flex-view'
 
 import Canvas from './fireflies/engine'
 
