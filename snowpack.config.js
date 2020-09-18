@@ -11,7 +11,9 @@ module.exports = {
     ],
     "snowpack-plugin-sass",
     ["snowpack-plugin-content-hash", {
-      exts: [".js", ".jsx"]
+      exts: [".js", ".jsx"],
+      hashLength: 8,
+      hashAlgorithm: "sha256",
     }],
     ["snowpack-plugin-baseurl-handler", {
       exts: [".html", ".js", ".jsx", ".css", ".scss"],

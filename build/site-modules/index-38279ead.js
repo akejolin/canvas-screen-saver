@@ -1,0 +1,1 @@
+import t from"../metadata/env-fa26a52e.js";import.meta.env=t;import e from"../web_modules/react-4d93596b.js";import o from"../web_modules/react-dom-5b8c2c7a.js";import m from"./app-33edbf93.js";o.render(e.createElement(e.StrictMode,null,e.createElement(m,null)),document.getElementById("root")),import.meta.hot&&import.meta.hot.accept();
