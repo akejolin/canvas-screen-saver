@@ -180,8 +180,8 @@ class _cls extends React.Component {
             width={this.state.screen.width}
             height={this.state.screen.height}
           />
-          <FlexView style={{position: 'absolute', zIndex: 10, bottom: 10, height: 60}}>
-            <button onClick={this.optionClicked.bind(this)}>New</button>
+          <FlexView style={{position: 'absolute', zIndex: 9, bottom: 10, height: 60}}>
+            <button style={{marginBottom: 0}} onClick={this.optionClicked.bind(this)}>New</button>
           </FlexView>
       </React.Fragment>
     )
